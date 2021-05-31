@@ -18,7 +18,7 @@ script:
   - cd udagram-api-feed
   - docker build -t udacity-udagram-api-feed --build-arg POSTGRES_USERNAME=${POSTGRES_USERNAME} --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --build-arg POSTGRES_HOST=${POSTGRES_HOST} --build-arg POSTGRES_DB=${POSTGRES_DB} --build-arg AWS_BUCKET=${AWS_BUCKET} --build-arg AWS_REGION=${AWS_REGION} --build-arg AWS_PROFILE=${AWS_PROFILE} --build-arg JWT_SECRET=${JWT_SECRET} --build-arg URL=${URL} .
   - docker tag udacity-udagram-api-feed slbenficaboy/udacity-udagram-api-feed:latest
-  - cd ../udacity-udagram-api-users
+  - cd ../udagram-api-users
   - docker build -t udacity-udagram-api-users --build-arg POSTGRES_USERNAME=${POSTGRES_USERNAME} --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --build-arg POSTGRES_HOST=${POSTGRES_HOST} --build-arg POSTGRES_DB=${POSTGRES_DB} --build-arg AWS_BUCKET=${AWS_BUCKET} --build-arg AWS_REGION=${AWS_REGION} --build-arg AWS_PROFILE=${AWS_PROFILE} --build-arg JWT_SECRET=${JWT_SECRET} --build-arg URL=${URL} .
   - docker tag udacity-udagram-api-users slbenficaboy/udacity-udagram-api-users:latest
   - cd ../udagram-frontend
