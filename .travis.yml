@@ -1,0 +1,36 @@
+language: node_js
+node_js:
+  - 13
+
+services:
+  - docker
+
+# Pre-testing installs
+install:
+  - echo "nothing needs to be installed"
+
+# Scripts to be run such as tests
+before_script:
+  - echo "no tests"
+
+script:
+  - docker --version # print the version for logging
+  - cd udagram-api-feed
+  - docker build -t udacity-udagram-api-feed --build-arg POSTGRES_USERNAME=${POSTGRES_USERNAME} --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --build-arg POSTGRES_HOST=${POSTGRES_HOST} --build-arg POSTGRES_DB=${POSTGRES_DB} --build-arg AWS_BUCKET=${AWS_BUCKET} --build-arg AWS_REGION=${AWS_REGION} --build-arg AWS_PROFILE=${AWS_PROFILE} --build-arg JWT_SECRET=${JWT_SECRET} --build-arg URL=${URL} .
+  - docker tag udacity-udagram-api-feed slbenficaboy/udacity-udagram-api-feed:latest
+  - cd ../udacity-udagram-api-users
+  - docker build -t udacity-udagram-api-users --build-arg POSTGRES_USERNAME=${POSTGRES_USERNAME} --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --build-arg POSTGRES_HOST=${POSTGRES_HOST} --build-arg POSTGRES_DB=${POSTGRES_DB} --build-arg AWS_BUCKET=${AWS_BUCKET} --build-arg AWS_REGION=${AWS_REGION} --build-arg AWS_PROFILE=${AWS_PROFILE} --build-arg JWT_SECRET=${JWT_SECRET} --build-arg URL=${URL} .
+  - docker tag udacity-udagram-api-users slbenficaboy/udacity-udagram-api-users:latest
+  - cd ../udagram-frontend
+  - docker build -t udacity-udagram-frontend .
+  - docker tag udacity-udagram-frontend slbenficaboy/udacity-udagram-frontend:latest
+  - cd ../udagram-reverse-proxy
+  - docker build -t udacity-udagram-reverse-proxy .
+  - docker tag udacity-udagram-reverse-proxy:latest slbenficaboy/udacity-udagram-reverse-proxy
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push slbenficaboy/udacity-udagram-api-feed:latest
+  - docker push slbenficaboy/udacity-udagram-api-users:latest
+  - docker push slbenficaboy/udacity-udagram-frontend:latest
+  - docker push slbenficaboy/udacity-udagram-reverse-proxy
